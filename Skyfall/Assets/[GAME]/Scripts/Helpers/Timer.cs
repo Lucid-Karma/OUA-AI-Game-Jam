@@ -27,6 +27,7 @@ public class SliderTimer : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             Time.timeScale = 0.2f;
+            decreaseSpeed = 15f;
             isSpacePressed = true;
         }
         else
@@ -41,6 +42,7 @@ public class SliderTimer : MonoBehaviour
             if (deTimer.value <= 0)
             {
                 deTimer.value = 0;
+                Time.timeScale = 1;
             }
         }
         else
