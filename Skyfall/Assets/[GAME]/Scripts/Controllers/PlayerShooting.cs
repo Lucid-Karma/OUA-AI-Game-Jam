@@ -2,12 +2,19 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    public Camera playerCamera;
+    private Camera _playerCamera;
     public float shootingRange = 100f;
+
+    void Start()
+    {
+        _playerCamera = Camera.main;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetMouseButtonDown(0))
         {
             Shoot();
         }
@@ -30,7 +37,7 @@ public class PlayerShooting : MonoBehaviour
 
     void Shoot()
     {
-        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Ray ray = _playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, shootingRange))
