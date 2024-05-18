@@ -12,24 +12,26 @@ public class MeshDestroy : MonoBehaviour
 
     public int CutCascades = 1;
     public float ExplodeForce = 0;
-    public float timeToDestroyAfterSingleCall = 10f; // Time after which the object should be destroyed after a single call
-    private int _destroyCount = 0; // Counter to track number of calls to DestroyMesh
+
+    // void Update()
+    // {
+    //     if (Input.GetMouseButtonDown(0))
+    //     {
+    //         DestroyMesh();
+    //     }
+    // }
+    int destroyCount;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Meteor"))
+        if(other.gameObject.CompareTag("Meteor"))
         {
             DestroyMesh();
-            _destroyCount++;
+            destroyCount++;
 
-            if (_destroyCount >= 3)
+            if(destroyCount >= 3)
             {
                 Destroy(gameObject);
-                return;
-            }
-            if (_destroyCount == 1)
-            {
-                StartCoroutine(DestroyAfterTime(timeToDestroyAfterSingleCall));
             }
         }
     }
@@ -73,20 +75,13 @@ public class MeshDestroy : MonoBehaviour
             subParts.Clear();
         }
 
-        foreach (var part in parts)
+        for (var i = 0; i < parts.Count; i++)
         {
-            part.MakeGameobject(this, transform); // Pass the parent transform
-            part.GameObject.GetComponent<Rigidbody>().AddForceAtPosition(part.Bounds.center * ExplodeForce, transform.position);
+            parts[i].MakeGameobject(this);
+            parts[i].GameObject.GetComponent<Rigidbody>().AddForceAtPosition(parts[i].Bounds.center * ExplodeForce, transform.position);
         }
-    }
 
-    private IEnumerator DestroyAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-        if (_destroyCount < 3)
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 
     private PartMesh GenerateMesh(PartMesh original, Plane plane, bool left)
@@ -94,6 +89,7 @@ public class MeshDestroy : MonoBehaviour
         var partMesh = new PartMesh() { };
         var ray1 = new Ray();
         var ray2 = new Ray();
+
 
         for (var i = 0; i < original.Triangles.Length; i++)
         {
@@ -150,6 +146,8 @@ public class MeshDestroy : MonoBehaviour
                 {
                     partMesh.AddTriangle(i,
                                         original.Vertices[triangles[j + singleIndex]],
+                                        //Vector3.Lerp(originalMesh.vertices[triangles[j + singleIndex]], originalMesh.vertices[triangles[j + ((singleIndex + 1) % 3)]], lerp1),
+                                        //Vector3.Lerp(originalMesh.vertices[triangles[j + singleIndex]], originalMesh.vertices[triangles[j + ((singleIndex + 2) % 3)]], lerp2),
                                         ray1.origin + ray1.direction.normalized * enter1,
                                         ray2.origin + ray2.direction.normalized * enter2,
                                         original.Normals[triangles[j + singleIndex]],
@@ -158,7 +156,7 @@ public class MeshDestroy : MonoBehaviour
                                         original.UV[triangles[j + singleIndex]],
                                         Vector2.Lerp(original.UV[triangles[j + singleIndex]], original.UV[triangles[j + ((singleIndex + 1) % 3)]], lerp1),
                                         Vector2.Lerp(original.UV[triangles[j + singleIndex]], original.UV[triangles[j + ((singleIndex + 2) % 3)]], lerp2));
-
+                    
                     continue;
                 }
 
@@ -186,6 +184,8 @@ public class MeshDestroy : MonoBehaviour
                                         Vector2.Lerp(original.UV[triangles[j + singleIndex]], original.UV[triangles[j + ((singleIndex + 2) % 3)]], lerp2));
                     continue;
                 }
+
+
             }
         }
 
@@ -258,9 +258,9 @@ public class MeshDestroy : MonoBehaviour
             Bounds.min = Vector3.Min(Bounds.min, vert1);
             Bounds.min = Vector3.Min(Bounds.min, vert2);
             Bounds.min = Vector3.Min(Bounds.min, vert3);
-            Bounds.max = Vector3.Max(Bounds.max, vert1);
-            Bounds.max = Vector3.Max(Bounds.max, vert2);
-            Bounds.max = Vector3.Max(Bounds.max, vert3);
+            Bounds.max = Vector3.Min(Bounds.max, vert1);
+            Bounds.max = Vector3.Min(Bounds.max, vert2);
+            Bounds.max = Vector3.Min(Bounds.max, vert3);
         }
 
         public void FillArrays()
@@ -273,13 +273,12 @@ public class MeshDestroy : MonoBehaviour
                 Triangles[i] = _Triangles[i].ToArray();
         }
 
-        public void MakeGameobject(MeshDestroy original, Transform parent)
+        public void MakeGameobject(MeshDestroy original)
         {
             GameObject = new GameObject(original.name);
-            GameObject.transform.parent = parent; // Set parent transform
-            GameObject.transform.localPosition = Vector3.zero;
-            GameObject.transform.localRotation = Quaternion.identity;
-            GameObject.transform.localScale = Vector3.one;
+            GameObject.transform.position = original.transform.position;
+            GameObject.transform.rotation = original.transform.rotation;
+            GameObject.transform.localScale = original.transform.localScale;
 
             var mesh = new Mesh();
             mesh.name = original.GetComponent<MeshFilter>().mesh.name;
@@ -287,10 +286,10 @@ public class MeshDestroy : MonoBehaviour
             mesh.vertices = Vertices;
             mesh.normals = Normals;
             mesh.uv = UV;
-            for (var i = 0; i < Triangles.Length; i++)
+            for(var i = 0; i < Triangles.Length; i++)
                 mesh.SetTriangles(Triangles[i], i, true);
             Bounds = mesh.bounds;
-
+            
             var renderer = GameObject.AddComponent<MeshRenderer>();
             renderer.materials = original.GetComponent<MeshRenderer>().materials;
 
@@ -304,6 +303,8 @@ public class MeshDestroy : MonoBehaviour
             var meshDestroy = GameObject.AddComponent<MeshDestroy>();
             meshDestroy.CutCascades = original.CutCascades;
             meshDestroy.ExplodeForce = original.ExplodeForce;
+
         }
+
     }
 }
