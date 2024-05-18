@@ -591,7 +591,7 @@ GameObject:
   - component: {fileID: 1146069748}
   m_Layer: 0
   m_Name: ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -810,7 +810,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae83310ffc5c9ff4397d1c1fbd8b0a57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meteorPrefab: {fileID: 6130993858855834558, guid: 710e2b21108319a4a92c3dedfabee0ad, type: 3}
+  meteorPrefabs:
+  - {fileID: 151664, guid: fa49e460baf435b4780da7196c2ab473, type: 3}
+  - {fileID: 141316, guid: 84cc3cd234dfc9d4d9d2e92c0eb0af75, type: 3}
+  - {fileID: 130102, guid: 04d0bf4be9447154188d86f6e3b8dce9, type: 3}
   spawnInterval: 0.3
   spawnHeight: 50
   spawnAreaSize: {x: 100, y: 0, z: 100}

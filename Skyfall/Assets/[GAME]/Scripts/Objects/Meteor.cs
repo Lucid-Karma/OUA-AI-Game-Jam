@@ -3,10 +3,12 @@ using UnityEngine;
 public class Meteor : MonoBehaviour
 {
     public float fallSpeed = 50f;
+    private bool _isGrounded;
 
     void Update()
     {
-        transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
+        if(!_isGrounded)
+            transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
 
         if (transform.position.y <= 0)
         {
@@ -17,5 +19,13 @@ public class Meteor : MonoBehaviour
     void OnMouseDown()
     {
         Destroy(gameObject);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            _isGrounded = true;
+        }
     }
 }

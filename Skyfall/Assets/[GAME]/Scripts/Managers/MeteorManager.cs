@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class MeteorManager : MonoBehaviour
 {
-    public GameObject meteorPrefab;
+    public GameObject[] meteorPrefabs;
     public float spawnInterval = 2.0f;
     public float spawnHeight = 80f;
     public Vector3 spawnAreaSize = new Vector3(100f, 0, 100f);
 
     private float timer;
+    private int _meteorIndex;
 
     void Update()
     {
@@ -28,6 +29,7 @@ public class MeteorManager : MonoBehaviour
             Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2)
         );
 
-        Instantiate(meteorPrefab, spawnPosition, Quaternion.identity);
+        _meteorIndex = Random.Range(0, meteorPrefabs.Length);
+        Instantiate(meteorPrefabs[_meteorIndex], spawnPosition, Quaternion.identity);
     }
 }
