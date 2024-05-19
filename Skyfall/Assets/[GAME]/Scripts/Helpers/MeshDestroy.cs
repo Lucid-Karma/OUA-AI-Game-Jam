@@ -12,26 +12,15 @@ public class MeshDestroy : MonoBehaviour
 
     public int CutCascades = 1;
     public float ExplodeForce = 0;
-    public float timeToDestroyAfterSingleCall = 7f; // Time after which the object should be destroyed after a single call
-    private int _destroyCount = 0; // Counter to track number of calls to DestroyMesh
+
+    GameObject _parentObject;
+    public DestroyedPartsParent parent;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Meteor"))
         {
             DestroyMesh();
-            _destroyCount++;
-
-            if (_destroyCount >= 3)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            if (_destroyCount == 1)
-            {
-                StartCoroutine(DestroyAfterTime(timeToDestroyAfterSingleCall));
-            }
         }
     }
 
@@ -74,20 +63,18 @@ public class MeshDestroy : MonoBehaviour
             subParts.Clear();
         }
 
+        _parentObject = new GameObject("DestroyedParts");
+        _parentObject.AddComponent<DestroyedPartsParent>();
+        _parentObject.transform.localScale = gameObject.transform.localScale;
+        _parentObject.transform.position = transform.position;
+
         foreach (var part in parts)
         {
-            part.MakeGameobject(this, transform); // Pass the parent transform
+            part.MakeGameobject(this, _parentObject.transform); // Pass the new parent transform
             part.GameObject.GetComponent<Rigidbody>().AddForceAtPosition(part.Bounds.center * ExplodeForce, transform.position);
         }
-    }
 
-    private IEnumerator DestroyAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-        if (_destroyCount < 3)
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject); // Destroy the original object
     }
 
     private PartMesh GenerateMesh(PartMesh original, Plane plane, bool left)

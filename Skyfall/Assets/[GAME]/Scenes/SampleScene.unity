@@ -814,7 +814,7 @@ MonoBehaviour:
   - {fileID: 151664, guid: fa49e460baf435b4780da7196c2ab473, type: 3}
   - {fileID: 141316, guid: 84cc3cd234dfc9d4d9d2e92c0eb0af75, type: 3}
   - {fileID: 130102, guid: 04d0bf4be9447154188d86f6e3b8dce9, type: 3}
-  spawnInterval: 0.3
+  spawnInterval: 0.7
   spawnHeight: 50
   spawnAreaSize: {x: 100, y: 0, z: 100}
 --- !u!4 &1537273816
@@ -1157,6 +1157,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2430508822655329110, guid: 6cfa53f36589325418f35824b76ed367, type: 3}
+      propertyPath: parent
+      value: 
+      objectReference: {fileID: 2439677546773702640, guid: 31de32a1be614424e98ccd0220ceb1b1, type: 3}
     - target: {fileID: 8933784565236756608, guid: 6cfa53f36589325418f35824b76ed367, type: 3}
       propertyPath: m_Name
       value: house
