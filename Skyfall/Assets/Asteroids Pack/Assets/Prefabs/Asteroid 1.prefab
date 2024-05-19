@@ -316,6 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8093f7400ffb2314c918cd8e6011ae37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreManager: {fileID: 8793647542436666045, guid: 0d71a24879af6004b93755145bc36c46, type: 3}
   fallSpeed: 13
 --- !u!136 &7838279172383019767
 CapsuleCollider:

@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MeteorManager : MonoBehaviour
 {
+    [HideInInspector] public static UnityEvent OnMeteorDestroy = new();
+
     public GameObject[] meteorPrefabs;
     public float spawnInterval = 2.0f;
     public float spawnHeight = 80f;

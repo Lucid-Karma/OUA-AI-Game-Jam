@@ -19,6 +19,7 @@ public class Meteor : MonoBehaviour
     void OnMouseDown()
     {
         Destroy(gameObject);
+        MeteorManager.OnMeteorDestroy.Invoke();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -26,6 +27,7 @@ public class Meteor : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             _isGrounded = true;
+            Destroy(gameObject);
         }
     }
 }

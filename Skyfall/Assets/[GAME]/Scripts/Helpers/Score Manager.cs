@@ -7,15 +7,18 @@ public class ScoreManager : MonoBehaviour
 
     private int score = 0;
 
-    void Update()
+    private void OnEnable()
     {
-        // Fare sol týklandýðýnda
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Skoru artýr
-            score++;
-            // Skoru ekranda güncelle
-            scoreText.text = "Score: " + score;
-        }
+        MeteorManager.OnMeteorDestroy.AddListener(UpdateScore);
+    }
+    private void OnDisable()
+    {
+        MeteorManager.OnMeteorDestroy.RemoveListener(UpdateScore);
+    }
+
+    private void UpdateScore()
+    {
+        score++;
+        scoreText.text = "Score: " + score;
     }
 }

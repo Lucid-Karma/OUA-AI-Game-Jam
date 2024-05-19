@@ -19,7 +19,6 @@ public class RandomRotator : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             _rb.angularVelocity = Vector3.zero;
-            Destroy(gameObject);
         }
     }
 }
