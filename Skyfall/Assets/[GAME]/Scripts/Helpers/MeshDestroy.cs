@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MeshDestroy : MonoBehaviour
 {
+    public ParticleSystem fireParticles;
     private bool edgeSet = false;
     private Vector3 edgeVertex = Vector3.zero;
     private Vector2 edgeUV = Vector2.zero;
@@ -74,6 +75,7 @@ public class MeshDestroy : MonoBehaviour
             part.GameObject.GetComponent<Rigidbody>().AddForceAtPosition(part.Bounds.center * ExplodeForce, transform.position);
         }
 
+        fireParticles.Play();
         Destroy(gameObject); // Destroy the original object
     }
 

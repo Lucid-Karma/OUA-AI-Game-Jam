@@ -4,6 +4,7 @@ public class PlayerShooting : MonoBehaviour
 {
     private Camera _playerCamera;
     public float shootingRange = 100f;
+    ZombieController _zombieController;
 
     void Start()
     {
@@ -20,21 +21,6 @@ public class PlayerShooting : MonoBehaviour
         }
     }
 
-    //void Shoot()
-    //{
-    //    RaycastHit hit;
-    //    if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, shootingRange))
-    //    {
-    //        if (hit.collider != null)
-    //        {
-    //            if (hit.collider.CompareTag("Meteor"))
-    //            {
-    //                Destroy(hit.collider.gameObject);
-    //            }
-    //        }
-    //    }
-    //}
-
     void Shoot()
     {
         Ray ray = _playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
@@ -47,6 +33,12 @@ public class PlayerShooting : MonoBehaviour
                 if (hit.collider.CompareTag("Meteor"))
                 {
                     Destroy(hit.collider.gameObject);
+                    MeteorManager.OnMeteorDestroy.Invoke();
+                }
+                else if (hit.collider.CompareTag("Enemy"))
+                {
+                    _zombieController = hit.collider.gameObject.GetComponent<ZombieController>();
+                    _zombieController.KillZombie();
                 }
             }
         }

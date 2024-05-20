@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FirstPersonController : MonoBehaviour
 {
+    private NavMeshAgent _agent;
     public float moveSpeed = 5f;
     public float lookSpeed = 2f;
     private Camera _playerCamera;
@@ -10,6 +12,7 @@ public class FirstPersonController : MonoBehaviour
 
     private void Start()
     {
+        _agent = GetComponent<NavMeshAgent>();
         _playerCamera = Camera.main;
     }
 
@@ -20,7 +23,8 @@ public class FirstPersonController : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
 
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
-        transform.position += move;
+        //transform.position += move;
+        _agent.Move(move);
 
         // mouse look
         float mouseX = Input.GetAxis("Mouse X") * lookSpeed;
