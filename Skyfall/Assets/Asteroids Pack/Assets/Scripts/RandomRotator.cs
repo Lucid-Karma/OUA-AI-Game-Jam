@@ -3,22 +3,22 @@ using System.Collections;
 
 public class RandomRotator : MonoBehaviour
 {
-    [SerializeField]
-    private float tumble;
+    //[SerializeField]
+    //private float tumble;
 
-    private Rigidbody _rb;
+    //private Rigidbody _rb;
 
-    void Start()
-    {
-        _rb = GetComponent<Rigidbody>();
-        _rb.angularVelocity = Random.insideUnitSphere * tumble;
-    }
+    //void Start()
+    //{
+    //    _rb = GetComponent<Rigidbody>();
+    //    _rb.angularVelocity = Random.insideUnitSphere * tumble;
+    //}
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            _rb.angularVelocity = Vector3.zero;
-        }
-    }
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Ground"))
+    //    {
+    //        _rb.angularVelocity = Vector3.zero;
+    //    }
+    //}
 }

@@ -13,6 +13,11 @@ public class MeteorManager : MonoBehaviour
     private float timer;
     private int _meteorIndex;
 
+    private void Start()
+    {
+        InvokeRepeating("DecreaseSpawnInterval", 10f, 10f);
+    }
+
     void Update()
     {
         timer += Time.deltaTime;
@@ -34,5 +39,22 @@ public class MeteorManager : MonoBehaviour
 
         _meteorIndex = Random.Range(0, meteorPrefabs.Length);
         Instantiate(meteorPrefabs[_meteorIndex], spawnPosition, Quaternion.identity);
+    }
+
+    void DecreaseSpawnInterval()
+    {
+        if(spawnInterval > 0)
+        {
+            if(spawnInterval > 0.5f)
+            {
+                spawnInterval -= 0.5f;
+            }
+            else if(spawnInterval == 0.5f)
+            {
+                spawnInterval = 0.5f;
+            }
+        }
+        else
+            spawnInterval = 0.5f;
     }
 }
