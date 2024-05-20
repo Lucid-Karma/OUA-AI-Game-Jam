@@ -5,33 +5,42 @@ using UnityEngine;
 
 public class MeshDestroy : MonoBehaviour
 {
+    // Evler yýkýldýðýnda duyacaðýmýz ses
+    public AudioSource explosionSound;
+    // Yýkýlma anýndan sonra göreceðimiz yangýn için particle effect
     public ParticleSystem fireParticles;
     private bool edgeSet = false;
     private Vector3 edgeVertex = Vector3.zero;
     private Vector2 edgeUV = Vector2.zero;
     private Plane edgePlane = new Plane();
 
-    public int CutCascades = 1;
-    public float ExplodeForce = 0;
+    public int CutCascades = 1; // evin kaç kez kesileceðini belirten deðiþken.
+    public float ExplodeForce = 0; // patlama gücü.
 
+    // Yalnýzca bir kere parçalanmayý garanti altýna almak için, parça klonlarýnýn yeni parent objesi için referans.
     GameObject _parentObject;
-    public DestroyedPartsParent parent;
 
+    // Evlere bir meteor düþmesi halinde yapýlacaklar için..
     private void OnTriggerEnter(Collider other)
     {
+        // triggerlanan objenin meteor olup olmadýðýný kontrol ediyoruz.
         if (other.gameObject.CompareTag("Meteor"))
         {
-            DestroyMesh();
+            explosionSound.Play();  // patlama sesini oynatýyoruz.
+            DestroyMesh();  // Ev modelinin mesh'ini parçalama (her bir parça yeni bir klon olacak) iþlemini baþlatýyoruz.
         }
     }
 
     private void DestroyMesh()
     {
+        // Orjinal mesh bilgileri
         var originalMesh = GetComponent<MeshFilter>().mesh;
         originalMesh.RecalculateBounds();
+        // Parçalarý tutan listeler
         var parts = new List<PartMesh>();
         var subParts = new List<PartMesh>();
 
+        // Ana parça için kopyalama
         var mainPart = new PartMesh()
         {
             UV = originalMesh.uv,
@@ -45,38 +54,46 @@ public class MeshDestroy : MonoBehaviour
 
         parts.Add(mainPart);
 
+        // Kesme iþlemi için döngü
         for (var c = 0; c < CutCascades; c++)
         {
             for (var i = 0; i < parts.Count; i++)
             {
                 var bounds = parts[i].Bounds;
                 bounds.Expand(0.5f);
-
+                // Rastgele bir kesme düzlemi oluþtur
                 var plane = new Plane(UnityEngine.Random.onUnitSphere, new Vector3(UnityEngine.Random.Range(bounds.min.x, bounds.max.x),
                                                                                    UnityEngine.Random.Range(bounds.min.y, bounds.max.y),
                                                                                    UnityEngine.Random.Range(bounds.min.z, bounds.max.z)));
 
 
+                // Kesme iþlemiyle yeni parçalar oluþtur
                 subParts.Add(GenerateMesh(parts[i], plane, true));
                 subParts.Add(GenerateMesh(parts[i], plane, false));
             }
+            // Yeni parçalar ana listeye aktarýlsýn
             parts = new List<PartMesh>(subParts);
             subParts.Clear();
         }
 
+        // Ýçine DestroyedPartsParent scripti ekleyeceðimiz yeni bir parentObject yaratýyoruz.
         _parentObject = new GameObject("DestroyedParts");
+        // DestroyedPartsParent scriptini ekliyoruz.
         _parentObject.AddComponent<DestroyedPartsParent>();
+        // Evlerin boyutlarýnýn deðiþmemesi için yeni parent'in boyutlarýný mevcut objeyle eþitliyoruz.
         _parentObject.transform.localScale = gameObject.transform.localScale;
+        // pozisyon deðerlerini de eþitliyoruz.
         _parentObject.transform.position = transform.position;
 
+        // Her parçayý yeni oluþturulan parent'a ekle ve ona bir kuvvet uygula
         foreach (var part in parts)
         {
-            part.MakeGameobject(this, _parentObject.transform); // Pass the new parent transform
+            part.MakeGameobject(this, _parentObject.transform); // Klonlarý yeni parentýn childý olarak ayarlýyoruz.
             part.GameObject.GetComponent<Rigidbody>().AddForceAtPosition(part.Bounds.center * ExplodeForce, transform.position);
         }
 
-        fireParticles.Play();
-        Destroy(gameObject); // Destroy the original object
+        fireParticles.Play(); // Yangýn efekti verecek particle'ý oynatýyoruz.
+        Destroy(gameObject); // Orjinal gameObjecti destroy ediyoruz.
     }
 
     private PartMesh GenerateMesh(PartMesh original, Plane plane, bool left)

@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class DestroyedPartsParent : MonoBehaviour
 {
+    // Yok edilmeden önce geçecek süre 
     public float timeToDestroyAfterSingleCall = 5f;
 
-    private void Start()
+    void Start()
     {
+        // "DestroyParentO" fonksiyonunu belirli bir gecikmeyle çaðýr
         Invoke("DestroyParentO", timeToDestroyAfterSingleCall);
     }
 
-    private void DestroyParentO()
+    // Parça halindeki ev klonlarýný yok etmek için kullanýlan metot.
+    void DestroyParentO()
     {
+        // Bu GameObject'u yok et
         Destroy(gameObject);
     }
 }
+
