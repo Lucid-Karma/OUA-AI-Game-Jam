@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerHealthController : MonoBehaviour
 {
+    // Tüm sýnýflar tarafýndan eriþilebilecek statik bir saðlýk deðiþkeni.
     public static int health;
 
     private void Start()

@@ -47,6 +47,7 @@ public class ZombieController : MonoBehaviour
 
     public void AttackPlayer()
     {
+        // playerla olan mesafeyi hesapla.
         float distanceToTarget = Vector3.Distance(transform.localPosition, player.localPosition);
         if (distanceToTarget < 3f) // Hedefe ulaþma mesafesi
         {
