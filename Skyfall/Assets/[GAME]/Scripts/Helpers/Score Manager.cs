@@ -5,6 +5,7 @@ public class ScoreManager : MonoBehaviour
 {
     // Oyundaki mevcut skoru gösteren Text UI elemaný
     public Text scoreText;
+    public Text yourScore;
 
     // Yüksek skoru gösteren Text UI elemaný
     public Text highScoreText;
@@ -26,11 +27,13 @@ public class ScoreManager : MonoBehaviour
     {
         // MeteorManager'dan MeteorDestroy eventini dinle
         MeteorManager.OnMeteorDestroy.AddListener(UpdateScore);
+        GameManager.OnLevelFail += UpdateYourScore;
     }
 
     private void OnDisable()
     {
         MeteorManager.OnMeteorDestroy.RemoveListener(UpdateScore);
+        GameManager.OnLevelFail -= UpdateYourScore;
     }
 
     private void UpdateScore()
@@ -46,5 +49,10 @@ public class ScoreManager : MonoBehaviour
             highScoreText.text = "High Score: " + highScore;
             PlayerPrefs.SetInt("HighScore", highScore); // Yüksek skoru kaydet
         }
+    }
+
+    private void UpdateYourScore()
+    {
+        yourScore.text = "Your Score: " + score;
     }
 }

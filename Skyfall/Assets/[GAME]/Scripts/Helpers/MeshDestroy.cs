@@ -28,6 +28,11 @@ public class MeshDestroy : MonoBehaviour
         {
             explosionSound.Play();  // patlama sesini oynatýyoruz.
             DestroyMesh();  // Ev modelinin mesh'ini parçalama (her bir parça yeni bir klon olacak) iþlemini baþlatýyoruz.
+            GameManager.HouseDestroyCount++;
+            if (GameManager.HouseDestroyCount >= 4)
+            {
+                GameManager.OnLevelFail.Invoke();
+            }
         }
     }
 

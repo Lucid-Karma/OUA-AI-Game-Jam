@@ -23,6 +23,8 @@ public class ZombieController : MonoBehaviour
         transform.LookAt(player);
         // Zombi konumunu NavMeshAgent konumunun biraz aþaðýsýna ayarla (y ekseni kaydýrma)
         transform.position = new Vector3(agent.transform.position.x, agent.transform.position.y - 0.5f, agent.transform.position.z);
+
+        AttackPlayer();
     }
 
     // Zombiyi öldürme fonksiyonu
@@ -41,6 +43,15 @@ public class ZombieController : MonoBehaviour
         yield return new WaitForSeconds(1.033f);
         // Zombi GameObject'unu yok et
         Destroy(gameObject);
+    }
+
+    public void AttackPlayer()
+    {
+        float distanceToTarget = Vector3.Distance(transform.localPosition, player.localPosition);
+        if (distanceToTarget < 3f) // Hedefe ulaþma mesafesi
+        {
+            _animator.SetTrigger("attack");
+        }
     }
 }
 
